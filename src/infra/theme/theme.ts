@@ -43,8 +43,8 @@ export const getTheme = (mode: "light" | "dark", locale: MUILocaleData) => {
                                 light: "#FF9900",
                                 main: "#C96748"
                             },
-                            customGreen: {
-                                main: "#148FA1",
+                            DayGreen: {
+                                main: "#019BA7",
                             },
                             customGreen2: {
                                 main: "#009900",

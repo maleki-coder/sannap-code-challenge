@@ -1,6 +1,4 @@
-import {
-    // SurveyList,
-} from "@/pages/index";
+import { Main } from "@/pages/index";
 import {
     Layout,
 } from "@components/index";
@@ -15,8 +13,8 @@ export const router = createBrowserRouter([
         ),
         children: [
             {
-                path: "/survey-list",
-                element: <><div>sdfdsfs</div></>,
+                path: "/main",
+                element: <Main/>
             },
         ],
     }
