@@ -1,0 +1,17 @@
+@font-face {
+    font-family: 'IRANSansX-Regular';
+    src: url('/assets/fonts/IRANSansX-Regular.woff') format('truetype');
+    font-weight: 500;
+}
+
+@font-face {
+    font-family: 'IRANSansXFaNum-Medium';
+    src: url('/assets/fonts/IRANSansXFaNum-Medium.woff') format('truetype');
+    font-weight: 500;
+}
+
+@font-face {
+    font-family: 'ArialMT';
+    src: url('/assets/fonts/ArialMT.woff') format('truetype');
+    font-weight: 400;
+}

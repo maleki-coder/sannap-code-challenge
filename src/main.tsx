@@ -1,10 +1,33 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.tsx'
+// import "@infra/theme/index.css";
+// import "@infra/theme/font.css";
 
-createRoot(document.getElementById('root')!).render(
+import CssBaseline from "@mui/material/CssBaseline";
+import { MUIWrapper } from "@infra/index";
+import { RouterProvider } from "react-router-dom";
+import { SnackbarProvider } from "notistack";
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import { router } from "./routes/Routes";
+import { InitSnackbar } from "@utils/index";
+
+createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <App />
-  </StrictMode>,
-)
+    <MUIWrapper>
+      <CssBaseline />
+      <SnackbarProvider
+        maxSnack={5}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "center",
+        }}
+        classes={{
+          containerRoot: "text-right",
+        }}
+        dense={true}
+      >
+        <InitSnackbar />
+        <RouterProvider router={router} />
+      </SnackbarProvider>
+    </MUIWrapper>
+  </StrictMode>
+);
