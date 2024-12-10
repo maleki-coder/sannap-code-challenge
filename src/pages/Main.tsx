@@ -8,7 +8,7 @@ const StyledBox = styled(Box)(({ theme }) => ({
     [theme.breakpoints.down('sm')]: {
         width: "100%",
     },
-    zIndex : 1,
+    zIndex : 1, 
     display: 'flex',
     flexWrap: 'wrap',
     justifyContent: 'center',

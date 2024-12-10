@@ -388,13 +388,13 @@ export const getTheme = (mode: "light" | "dark", locale: MUILocaleData) => {
                         styleOverrides: {
                             root: ({ theme }) => ({
                                 backgroundColor: theme.palette.primary.main,
-                                borderRadius: "24px",
-                                height: theme.spacing(5),
+                                borderRadius: theme.spacing(1),
+                                // height: theme.spacing(5),
                                 fontSize: "0.8rem",
-                                color: theme.palette["customBlack"].main,
-                                "& .MuiOutlinedInput-notchedOutline": {
-                                    paddingInlineStart: "32px",
-                                },
+                                // color: theme.palette["customBlack"].main,
+                                // "& .MuiOutlinedInput-notchedOutline": {
+                                //     paddingInlineStart: "32px",
+                                // },
                                 "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
                                     borderColor: theme.palette["customBrown"].main, // Border color when focused
                                 },
@@ -416,7 +416,7 @@ export const getTheme = (mode: "light" | "dark", locale: MUILocaleData) => {
                         styleOverrides: {
                             root: ({ theme }) => ({
                                 color: theme.palette["customBlack"].main,
-                                paddingInlineStart: "32px",
+                                paddingInlineStart: "2px",
                                 "&.Mui-focused": {
                                     color: theme.palette["customBrown"].main,
                                 },
