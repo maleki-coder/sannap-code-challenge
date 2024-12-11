@@ -3,6 +3,7 @@ import { Outlet } from "react-router-dom";
 
 const StyledBox = styled(Box)(({ theme }) => ({
     padding: theme.spacing(2),
+    paddingBottom : theme.spacing(4),
     backgroundColor : theme.palette.common.white,
     width: "100%",
     top : theme.spacing(10),

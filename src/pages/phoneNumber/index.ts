@@ -1,2 +1,2 @@
-export * from "./StyledForm";
-export * from "./StyledHeaderBox";
+export * from "./components/StyledForm";
+export * from "./components/StyledHeaderBox";

@@ -17,11 +17,11 @@ export default defineConfig({
   server: {
     cors: false,
     // proxy: {
-    //   "/api": {
-    //     target: "http://192.168.105.102:5050",
+    //   "/localhost": {
+    //     target: "https://stage-api.sanaap.co/api/v2/app/DEY/",
     //     changeOrigin: true,
     //     secure: false,
-    //     rewrite: (p) => p.replace(/^\/api/, ""),
+    //     rewrite: (path) => path.replace(/^\/api/, "/test")
     //   },
     // },
   },

@@ -10,7 +10,7 @@ const StyledDiv = styled('div')(({ theme }) => ({
     width: "100%",
     display: 'flex',
     justifyContent: 'center',
-    backgroundColor: theme.palette['DayGreen'].main,
+    backgroundColor: theme.palette['dayGreen'].main,
 }));
 const StyledImg = styled('img')(({ theme }) => ({
     top: theme.spacing(4),

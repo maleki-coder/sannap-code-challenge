@@ -5,7 +5,17 @@ import {StyledHeaderBox , StyledForm} from "@/pages/phoneNumber/index"
 import { useTranslation } from "react-i18next";
 import { useFormik } from "formik";
 import * as yup from "yup";
+import LoadingButton from "@mui/lab/LoadingButton";
+import { useCreateOtp } from "@hooks/useCreateOtp";
+import { useNavigate } from "react-router-dom";
 export function RegisterPhoneNumber() {
+  const navigate = useNavigate();
+    const {isPending ,mutate : sendOtpSms} = useCreateOtp({
+      onSuccess : (data) => {
+        console.log(data)
+        // navigate("./")
+      }
+    });
     const theme = useTheme();
     const { t } = useTranslation();
     const initialValues = {
@@ -13,14 +23,16 @@ export function RegisterPhoneNumber() {
       
     };
     const validationSchema = yup.object({
-      phoneNumber: yup.string().required(t("phoneNumber.required")),
+      phoneNumber: yup.string()
+      .required(t("phoneNumber.required"))
+      .matches(/^\d{11}$/, t("phoneNumber.minimunNumberError")),
     });
   
      const formik = useFormik({
        initialValues: initialValues,
        validationSchema: validationSchema,
        onSubmit: async () => {
-        //  await loginRequest({ username: "", password: "" });
+         await sendOtpSms({phone_number : formik.values.phoneNumber});
        },
      });
     return (
@@ -62,8 +74,18 @@ export function RegisterPhoneNumber() {
                 : ""
             }
             required
+            disabled={isPending}
             autoComplete="phoneNumber"
           ></TextField>
+          <LoadingButton
+            loading={isPending}
+            fullWidth
+            type="submit"
+            disabled={!formik.isValid || !formik.dirty}
+            variant="dayGreen"
+          >
+            {t("general.continue")}
+          </LoadingButton>
         </StyledForm>
       </>
     );
