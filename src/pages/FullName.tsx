@@ -33,7 +33,7 @@ export function FullName() {
         first_name: formik.values.first_name,
         last_name: formik.values.last_name,
       });
-      navigate('/register/extraData');
+      navigate('/register/extraInfo');
     },
   });
   return (

@@ -1,32 +1,28 @@
 import { useMutation, UseMutationOptions } from "@tanstack/react-query";
 import axiosInstance from "@infra/api/axios.instance";
 import API_ENDPOINTS from "@infra/api/endPoints";
-interface CreateOtpPayload {
-  phone_number: string;
+interface CheckAgencyCodePayload {
+  agent_code: string;
 }
 
-interface CreateOtpResponse {
+interface CheckAgencyCodeResponse {
   success: boolean;
   message: string;
   data?: any;
 }
 
-interface CreateOtpPayload {
-  phone_number: string;
-}
-
-export const useCreateOtp = (
+export const useCheckAgencyCode = (
   options?: UseMutationOptions<
-    CreateOtpResponse,
+    CheckAgencyCodeResponse,
     Error,
-    CreateOtpPayload,
+    CheckAgencyCodePayload,
     unknown
   >
 ) => {
-  return useMutation<CreateOtpResponse, Error, CreateOtpPayload>({
-    mutationFn: async (payload: CreateOtpPayload) => {
+  return useMutation<CheckAgencyCodeResponse, Error, CheckAgencyCodePayload>({
+    mutationFn: async (payload: CheckAgencyCodePayload) => {
       const response = await axiosInstance.post(
-        API_ENDPOINTS.sendOtpSms,
+        API_ENDPOINTS.checkAgencyCode,
         payload
       );
       return response.data;

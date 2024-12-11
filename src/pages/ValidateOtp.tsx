@@ -5,7 +5,7 @@ import { useFormik } from "formik";
 import OtpInput from "react-otp-input";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { useNavigate } from "react-router-dom";
-import { useValidateOtp } from "@hooks/useValidateOpt";
+import { useValidateOtp } from "@hooks/useValidateOtp";
 import { useRepresentativeStore } from "@store/index";
 export function ValidateOtp() {
   const navigate = useNavigate();

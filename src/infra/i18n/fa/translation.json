@@ -18,5 +18,9 @@
         "last_name" : "نام خانوادگی",
         "firstName_required" : "لطفا نام خود را وارد کنید",
         "lastName_required" :"لطفا نام خانوادگی خود را وارد کنید"
+    },
+    "extraInfo" : {
+        "agent_code" : "کد نمایندگی",
+        "agent_code_required" : "لطفا کد نمایندگی را وارد کنید"
     }
 }
