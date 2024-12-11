@@ -1,4 +1,10 @@
-import { Main , RegisterPhoneNumber} from "@/pages/index";
+import {
+  Main,
+  PhoneNumber,
+  ValidateOtp,
+  FullName,
+  ExtraInfo,
+} from "@/pages/index";
 import {
     Layout,
 } from "@components/index";
@@ -13,14 +19,30 @@ export const router = createBrowserRouter([
         element: <Main />,
         children: [
           {
-            index: true, // This makes it the default sub-route for "/register"
-            element: <Navigate to="phonenumber" replace />, // Redirect to "registerPhoneNumber"
+            index: true,
+            element: <Navigate to="phonenumber" replace />,
           },
           {
             path: "phonenumber",
-            element: <RegisterPhoneNumber />,
+            element: <PhoneNumber />,
+          },
+          {
+            path: "validateOtp",
+            element: <ValidateOtp />,
+          },
+          {
+            path: "fullname",
+            element: <FullName />,
+          },
+          {
+            path: "extraInfo",
+            element: <ExtraInfo />,
           },
         ],
+      },
+      {
+        path: "*",
+        element: <Navigate to="/register" replace />,
       },
     ],
   },
