@@ -27,6 +27,7 @@
     "city": "شهر",
     "province_required": "لطفا استان خود را انتخاب کنید",
     "city_required": "لطفا شهر خود را انتخاب کنید",
+    "agent_name_required" : "نام نمایندگی را وارد کنید",
     "insurance_branch_required" : "لطفا شعبه را انتخاب کنید",
     "phoneNumber":  "تلفن ثابت",
     "enter_agency_code" : "کد نمابندگی را وارد کنید",

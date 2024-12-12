@@ -51,7 +51,7 @@ export function ExtraInfo() {
   } = {
     agent_code: "",
     address: "",
-    agency_type: "",
+    agency_type: AgentType.REAL,
     city_code: "",
     county_code: "",
     insurance_branch: "",
@@ -69,6 +69,11 @@ export function ExtraInfo() {
     insurance_branch: yup
       .string()
       .required(t("extraInfo.insurance_branch_required")),
+    name: yup.string().when("agent_type", {
+      is: "legal",
+      then: (schema) => schema.required(t("extraInfo.agent_name_required")),
+      otherwise: (schema) => schema.notRequired(),
+    }),
   });
   const formik = useFormik({
     initialValues: initialValues,
@@ -324,17 +329,13 @@ export function ExtraInfo() {
           <TextField
             fullWidth
             label={t("extraInfo.agent_name")}
-            name="agent_type"
-            id="agent_type"
-            value={formik.values.agency_type || ""}
+            name="name"
+            id="name"
+            value={formik.values.name || ""}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            error={validateError(formik.touched, formik.errors, "agency_type")}
-            helperText={validateHelper(
-              formik.touched,
-              formik.errors,
-              "agency_type"
-            )}
+            error={validateError(formik.touched, formik.errors, "name")}
+            helperText={validateHelper(formik.touched, formik.errors, "name")}
             required
           ></TextField>
         )}
