@@ -4,5 +4,5 @@ export const StyledForm = styled('form')(({ theme }) => ({
   marginTop : theme.spacing(3),
   display : 'flex',
   flexWrap : 'wrap',
-  gap : theme.spacing(8)
+  gap : theme.spacing(4)
 }));

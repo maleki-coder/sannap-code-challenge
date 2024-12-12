@@ -1,26 +1,34 @@
 {
-    "general" : {
-        "continue" : "ادامه"
-    },
-    "phoneNumber" : {
-        "title" : "شماره موبایل خود را وارد کنید.",
-        "number" : "تلفن همراه",
-        "required" : "شماره تلفن همراه الزامی است.",
-        "minimum_number_error" : "شماره تلفن همراه صحیح نیست",
-        "code_will_be_sent" : "کد تایید برای شما ارسال خواهد شد."
-    },
-    "validateOtp" : {
-        "title" : "کد تایید را وارد کنید.",
-        "required" : "لطفا کد ارسال شده را وارد نمایید."
-    },
-    "fullName" : {
-        "first_name" : "نام",
-        "last_name" : "نام خانوادگی",
-        "firstName_required" : "لطفا نام خود را وارد کنید",
-        "lastName_required" :"لطفا نام خانوادگی خود را وارد کنید"
-    },
-    "extraInfo" : {
-        "agent_code" : "کد نمایندگی",
-        "agent_code_required" : "لطفا کد نمایندگی را وارد کنید"
-    }
+  "general": {
+    "continue": "ادامه"
+  },
+  "phoneNumber": {
+    "title": "شماره موبایل خود را وارد کنید.",
+    "number": "تلفن همراه",
+    "required": "شماره تلفن همراه الزامی است.",
+    "minimum_number_error": "شماره تلفن همراه صحیح نیست",
+    "code_will_be_sent": "کد تایید برای شما ارسال خواهد شد."
+  },
+  "validateOtp": {
+    "title": "کد تایید را وارد کنید.",
+    "required": "لطفا کد ارسال شده را وارد نمایید."
+  },
+  "fullName": {
+    "first_name": "نام",
+    "last_name": "نام خانوادگی",
+    "firstName_required": "لطفا نام خود را وارد کنید",
+    "lastName_required": "لطفا نام خانوادگی خود را وارد کنید"
+  },
+  "extraInfo": {
+    "agent_code": "کد نمایندگی",
+    "agent_code_required": "لطفا کد نمایندگی را وارد کنید",
+    "province": "استان",
+    "insurance_branch": "شعبه بیمه",
+    "city": "شهر",
+    "province_required": "لطفا استان خود را انتخاب کنید",
+    "city_required": "لطفا شهر خود را انتخاب کنید",
+    "insurance_branch_required" : "لطفا شعبه را انتخاب کنید",
+    "phoneNumber":  "تلفن ثابت",
+    "enter_agency_code" : "کد نمابندگی را وارد کنید"
+  }
 }

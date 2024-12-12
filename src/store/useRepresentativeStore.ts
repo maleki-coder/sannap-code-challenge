@@ -27,14 +27,14 @@ export const useRepresentativeStore = create<RepresentativeStore>((set) => ({
     agency_type: "",
     agent_code: "",
     city_code: "",
-    county: "",
     first_name: "",
     insurance_branch: "",
     last_name: "",
     phone: "",
     phone_number: "",
     province: "",
-    Name: "",
+    name: "",
+    county_code: ""
   },
 
   // Method to set the whole representative object

@@ -381,6 +381,11 @@ export const getTheme = (mode: "light" | "dark", locale: MUILocaleData) => {
               },
             },
           },
+          MuiInputBase: {
+            styleOverrides: {
+              root: () => ({}),
+            },
+          },
           MuiOutlinedInput: {
             styleOverrides: {
               root: ({ theme }) => ({
