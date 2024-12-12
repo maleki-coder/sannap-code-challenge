@@ -11,6 +11,7 @@ export default defineConfig({
       "@infra": path.resolve(__dirname, "./src/infra"),
       "@utils": path.resolve(__dirname, "./src/utils"),
       "@store": path.resolve(__dirname, "./src/store"),
+      "@models": path.resolve(__dirname, "./src/models"),
       "@": path.resolve(__dirname, "./src"),
     },
   },

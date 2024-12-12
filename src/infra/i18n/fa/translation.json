@@ -29,6 +29,10 @@
     "city_required": "لطفا شهر خود را انتخاب کنید",
     "insurance_branch_required" : "لطفا شعبه را انتخاب کنید",
     "phoneNumber":  "تلفن ثابت",
-    "enter_agency_code" : "کد نمابندگی را وارد کنید"
+    "enter_agency_code" : "کد نمابندگی را وارد کنید",
+    "agency_type" : "نوع نمایندگی:",
+    "legal" : "حقوقی",
+    "real" : "حقیقی",
+    "agent_name" : "نام نمایندگی"
   }
 }

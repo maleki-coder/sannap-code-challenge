@@ -1,14 +1,19 @@
 import {
   Autocomplete,
   CircularProgress,
-  IconButton,
+  FormControl,
   TextField,
   useTheme,
 } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { validateError, validateHelper } from "@utils/index";
 import { StyledForm } from "@/pages/phoneNumber/index";
-import { StyledPhoneNumberGrid } from "@/pages/extraInfo/index";
+import {
+  StyledFormControlLabel,
+  StyledFormLabel,
+  StyledRadio,
+  StyledRadioGroup,
+} from "@/pages/extraInfo/index";
 import { useTranslation } from "react-i18next";
 import { useFormik } from "formik";
 import * as yup from "yup";
@@ -29,12 +34,14 @@ import {
   useFetchListOfCities,
   useFetchListOfProvinces,
 } from "@hooks/index";
+import { AgentType } from "@/models";
 export function ExtraInfo() {
   const navigate = useNavigate();
   const theme = useTheme();
   const { t } = useTranslation();
   const { updateRepresentative } = useRepresentativeStore();
   const [branchSearchTerm, setBranchSearchTerm] = useState("");
+  const [isLegalFieldVisible, setIsLegalFieldVisible] = useState(false);
   const initialValues: Omit<
     RepresentativeRegistration,
     "code" | "first_name" | "last_name"
@@ -53,7 +60,7 @@ export function ExtraInfo() {
     province: "",
     name: "",
     tempCode: "",
-    tempPhoneNumber: ""
+    tempPhoneNumber: "",
   };
   const validationSchema = yup.object({
     agent_code: yup.string().required(t("extraInfo.agent_code_required")),
@@ -108,6 +115,12 @@ export function ExtraInfo() {
     formik.setFieldValue("city_code", null);
     formik.setFieldValue("insurance_branch", null);
   }
+
+  const handleAgentTypeChange = (agentType: AgentType): void => {
+    agentType == AgentType.LEGAL
+      ? setIsLegalFieldVisible(true)
+      : setIsLegalFieldVisible(false);
+  };
   return (
     <>
       <StyledForm onSubmit={formik.handleSubmit} noValidate autoComplete="on">
@@ -225,7 +238,12 @@ export function ExtraInfo() {
             />
           )}
         />
-        <StyledPhoneNumberGrid>
+        <Grid
+          container
+          direction={"row-reverse"}
+          width={"100%"}
+          spacing={theme.spacing(2)}
+        >
           <Grid size={{ xs: 3 }}>
             <TextField
               fullWidth
@@ -241,6 +259,11 @@ export function ExtraInfo() {
                 formik.errors,
                 "tempCode"
               )}
+              slotProps={{
+                htmlInput: {
+                  dir: "ltr",
+                },
+              }}
               required
             ></TextField>
           </Grid>
@@ -263,10 +286,58 @@ export function ExtraInfo() {
                 formik.errors,
                 "tempPhoneNumber"
               )}
+              slotProps={{
+                htmlInput: {
+                  dir: "ltr",
+                },
+              }}
               required
             ></TextField>
           </Grid>
-        </StyledPhoneNumberGrid>
+        </Grid>
+        <FormControl fullWidth>
+          <StyledFormLabel
+            sx={{ marginInlineStart: theme.spacing(1.5) }}
+            id="agency_type"
+          >
+            {t("extraInfo.agency_type")}
+          </StyledFormLabel>
+          <StyledRadioGroup
+            row
+            aria-labelledby="agency_type"
+            name="agency_type_group"
+            onChange={(e) => handleAgentTypeChange(e.target.value as AgentType)}
+          >
+            <StyledFormControlLabel
+              value={AgentType.REAL}
+              control={<StyledRadio />}
+              label={t("extraInfo." + AgentType.REAL)}
+            />
+            <StyledFormControlLabel
+              value={AgentType.LEGAL}
+              control={<StyledRadio />}
+              label={t("extraInfo." + AgentType.LEGAL)}
+            />
+          </StyledRadioGroup>
+        </FormControl>
+        {isLegalFieldVisible && (
+          <TextField
+            fullWidth
+            label={t("extraInfo.agent_name")}
+            name="agent_type"
+            id="agent_type"
+            value={formik.values.agency_type || ""}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={validateError(formik.touched, formik.errors, "agency_type")}
+            helperText={validateHelper(
+              formik.touched,
+              formik.errors,
+              "agency_type"
+            )}
+            required
+          ></TextField>
+        )}
         <LoadingButton
           fullWidth
           type="submit"

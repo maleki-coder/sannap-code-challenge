@@ -194,17 +194,17 @@ export const getTheme = (mode: "light" | "dark", locale: MUILocaleData) => {
               }),
             },
           },
-          MuiFormControlLabel: {
-            styleOverrides: {
-              root: ({ theme }) => ({
-                marginLeft: "0px",
-                marginRight: "0px",
-                "& .MuiFormControlLabel-label": {
-                  fontSize: theme.spacing(1.3),
-                },
-              }),
-            },
-          },
+          // MuiFormControlLabel: {
+          //   styleOverrides: {
+          //     root: ({ theme }) => ({
+          //       marginLeft: "0px",
+          //       marginRight: "0px",
+          //       "& .MuiFormControlLabel-label": {
+          //         fontSize: theme.spacing(1.3),
+          //       },
+          //     }),
+          //   },
+          // },
           MuiRadio: {
             styleOverrides: {
               root: ({ theme }) => ({
@@ -212,7 +212,7 @@ export const getTheme = (mode: "light" | "dark", locale: MUILocaleData) => {
                 paddingInlineEnd: theme.spacing(1),
                 color: theme.palette["customGray"].main, // Default color of the radio button
                 "&.Mui-checked": {
-                  color: theme.palette["customGreen2"].main, // Color when checked
+                  color: theme.palette["customRed"].main, // Color when checked
                 },
               }),
             },
@@ -350,7 +350,7 @@ export const getTheme = (mode: "light" | "dark", locale: MUILocaleData) => {
                 },
                 "&.Mui-checked .MuiSvgIcon-root": {
                   // Change the border or icon color when checked
-                  color: theme.palette["customGreen2"].main, // For checked state
+                  color: theme.palette["customRed"].main, // For checked state
                 },
               }),
             },
@@ -418,9 +418,10 @@ export const getTheme = (mode: "light" | "dark", locale: MUILocaleData) => {
             styleOverrides: {
               root: ({ theme }) => ({
                 color: theme.palette["customBlack"].main,
-                paddingInlineStart: "2px",
+                paddingInlineStart: theme.spacing(0.2),
+                // fontSize : '0.75rem',
                 "&.Mui-focused": {
-                  color: theme.palette["customBrown"].main,
+                  color: theme.palette["customBlack"].main,
                 },
               }),
             },
