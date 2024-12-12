@@ -9,6 +9,7 @@ import {
     Layout,
 } from "@components/index";
 import { createBrowserRouter, Navigate } from "react-router-dom";
+import { RegistrationGuard } from "./RegistrationGaurd";
 
 export const router = createBrowserRouter([
   {
@@ -24,19 +25,35 @@ export const router = createBrowserRouter([
           },
           {
             path: "phonenumber",
-            element: <PhoneNumber />,
+            element: (
+              <RegistrationGuard stepIndex={1}>
+                <PhoneNumber />
+              </RegistrationGuard>
+            ),
           },
           {
             path: "validateOtp",
-            element: <ValidateOtp />,
+            element: (
+              <RegistrationGuard stepIndex={2}>
+                <ValidateOtp />
+              </RegistrationGuard>
+            ),
           },
           {
             path: "fullname",
-            element: <FullName />,
+            element: (
+              <RegistrationGuard stepIndex={3}>
+                <FullName />
+              </RegistrationGuard>
+            ),
           },
           {
             path: "extraInfo",
-            element: <ExtraInfo />,
+            element: (
+              <RegistrationGuard stepIndex={4}>
+                <ExtraInfo />
+              </RegistrationGuard>
+            ),
           },
         ],
       },

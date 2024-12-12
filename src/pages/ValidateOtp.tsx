@@ -4,15 +4,15 @@ import { useTranslation } from "react-i18next";
 import { useFormik } from "formik";
 import OtpInput from "react-otp-input";
 import LoadingButton from "@mui/lab/LoadingButton";
-import { useNavigate } from "react-router-dom";
 import { useValidateOtp } from "@hooks/useValidateOtp";
-import { useRepresentativeStore } from "@store/index";
+import { useRepresentativeStore, useStepperStore } from "@store/index";
 export function ValidateOtp() {
-  const navigate = useNavigate();
+  const { setCurrentStep, setAllowedStep } = useStepperStore();
   const { representative } = useRepresentativeStore();
   const { isPending, mutate: validateOtp } = useValidateOtp({
     onSuccess: () => {
-      navigate("/register/fullname");
+      setCurrentStep(3);
+      setAllowedStep(3);
     },
   });
   const theme = useTheme();

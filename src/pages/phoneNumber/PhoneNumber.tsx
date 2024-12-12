@@ -5,16 +5,16 @@ import { useFormik } from "formik";
 import * as yup from "yup";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { useCreateOtp } from "@hooks/useCreateOtp";
-import { useNavigate } from "react-router-dom";
 import {
   RepresentativeRegistration,
   useRepresentativeStore,
+  useStepperStore,
 } from "@store/index";
 export function PhoneNumber() {
-  const navigate = useNavigate();
   const theme = useTheme();
   const { t } = useTranslation();
   const { updateRepresentative } = useRepresentativeStore();
+  const {setCurrentStep, setAllowedStep} = useStepperStore();
   const initialValues: Pick<RepresentativeRegistration, "phone_number"> = {
     phone_number: null,
   };
@@ -34,7 +34,8 @@ export function PhoneNumber() {
   const { isPending, mutate: sendOtpSms } = useCreateOtp({
     onSuccess: () => {
       updateRepresentative({ phone_number: formik.values.phone_number });
-      navigate("/register/validateOtp");
+      setCurrentStep(2);
+      setAllowedStep(2);
     },
   });
   return (

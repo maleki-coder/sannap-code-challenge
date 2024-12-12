@@ -1,19 +1,18 @@
-import { TextField, useTheme } from "@mui/material";
+import { TextField } from "@mui/material";
 import { StyledForm } from "@/pages/phoneNumber/index";
 import { useTranslation } from "react-i18next";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import LoadingButton from "@mui/lab/LoadingButton";
-import { useNavigate } from "react-router-dom";
 import {
   RepresentativeRegistration,
   useRepresentativeStore,
+  useStepperStore,
 } from "@store/index";
 export function FullName() {
-  const navigate = useNavigate();
-  const theme = useTheme();
   const { t } = useTranslation();
   const {  updateRepresentative } = useRepresentativeStore();
+  const { setCurrentStep, setAllowedStep } = useStepperStore();
   const initialValues: Pick<
     RepresentativeRegistration,
     "first_name" | "last_name"
@@ -33,7 +32,8 @@ export function FullName() {
         first_name: formik.values.first_name,
         last_name: formik.values.last_name,
       });
-      navigate('/register/extraInfo');
+      setCurrentStep(4);
+      setAllowedStep(4);
     },
   });
   return (

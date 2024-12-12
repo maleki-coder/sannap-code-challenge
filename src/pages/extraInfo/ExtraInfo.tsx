@@ -39,7 +39,7 @@ export function ExtraInfo() {
   const navigate = useNavigate();
   const theme = useTheme();
   const { t } = useTranslation();
-  const { updateRepresentative } = useRepresentativeStore();
+  const { updateRepresentative, representative } = useRepresentativeStore();
   const [branchSearchTerm, setBranchSearchTerm] = useState("");
   const [isLegalFieldVisible, setIsLegalFieldVisible] = useState(false);
   const initialValues: Omit<
@@ -82,7 +82,7 @@ export function ExtraInfo() {
       updateRepresentative({
         agent_code: formik.values.agent_code,
       });
-      // navigate("/register/extraInfo");
+      console.log(representative);
     },
   });
   const [isAgencyCodeDuplicate, setIsAgencyCodeDuplicate] = useState(false);
