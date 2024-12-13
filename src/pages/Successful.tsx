@@ -1,0 +1,9 @@
+
+export function Successful() {
+ 
+  return (
+    <>
+      
+    </>
+  );
+}

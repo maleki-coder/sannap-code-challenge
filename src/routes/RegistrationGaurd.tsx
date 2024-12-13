@@ -27,14 +27,20 @@ export const RegistrationGuard = ({ stepIndex, children }) => {
   }, [currentStep, navigate]);
   // If the user tries to access a step ahead of their allowed progress
   if (stepIndex > allowedStep) {
-    const steps = ["phonenumber", "validateOtp", "fullname", "extraInfo"];
+    const steps = ["phonenumber", "validateOtp", "fullname", "extraInfo", 'successful'];
     const validPath = `/register/${steps[allowedStep - 1]}`;
     return <Navigate to={validPath} replace />;
   }
 
   // If the user tries to access a step behind their current step
   if (stepIndex < currentStep) {
-    const steps = ["phonenumber", "validateOtp", "fullname", "extraInfo"];
+    const steps = [
+      "phonenumber",
+      "validateOtp",
+      "fullname",
+      "extraInfo",
+      "successful",
+    ];
     const validPath = `/register/${steps[currentStep - 1]}`;
     return <Navigate to={validPath} replace />;
   }

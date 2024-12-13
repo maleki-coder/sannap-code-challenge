@@ -18,10 +18,10 @@ import { useTranslation } from "react-i18next";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import LoadingButton from "@mui/lab/LoadingButton";
-import { useNavigate } from "react-router-dom";
 import {
   RepresentativeRegistration,
   useRepresentativeStore,
+  useStepperStore,
 } from "@store/index";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
@@ -40,6 +40,7 @@ export function ExtraInfo() {
   const theme = useTheme();
   const { t } = useTranslation();
   const { updateRepresentative, representative } = useRepresentativeStore();
+    const { setCurrentStep, setAllowedStep } = useStepperStore();
   const [branchSearchTerm, setBranchSearchTerm] = useState("");
   const [isLegalFieldVisible, setIsLegalFieldVisible] = useState(false);
   const initialValues: Omit<
@@ -70,7 +71,12 @@ export function ExtraInfo() {
       otherwise: (schema) => schema.notRequired(),
     }),
   });
-  const { isPending : isSignIpPending , mutate: signUp } = useSignUp();
+  const { isPending : isSignIpPending , mutate: signUp } = useSignUp({
+    onSuccess : () => {
+      setCurrentStep(5);
+      setAllowedStep(5);
+    }
+  });
   const formik = useFormik({
     initialValues: initialValues,
     validationSchema: validationSchema,

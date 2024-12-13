@@ -5,3 +5,4 @@ export * from "./phoneNumber/components/StyledForm.tsx";
 export * from "./ValidateOtp.tsx";
 export * from "./FullName.tsx";
 export * from "./extraInfo/ExtraInfo.tsx";
+export * from "./Successful.tsx"

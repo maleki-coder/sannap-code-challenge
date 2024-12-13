@@ -4,6 +4,7 @@ import {
   ValidateOtp,
   FullName,
   ExtraInfo,
+  Successful,
 } from "@/pages/index";
 import {
     Layout,
@@ -52,6 +53,14 @@ export const router = createBrowserRouter([
             element: (
               <RegistrationGuard stepIndex={4}>
                 <ExtraInfo />
+              </RegistrationGuard>
+            ),
+          },
+          {
+            path: "successful",
+            element: (
+              <RegistrationGuard stepIndex={5}>
+                <Successful />
               </RegistrationGuard>
             ),
           },
