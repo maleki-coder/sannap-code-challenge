@@ -1,1 +1,2 @@
-export *from "./AgentTypeEnum"
+export * from "./AgentTypeEnum";
+export * from "./IRepresentative";

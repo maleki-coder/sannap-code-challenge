@@ -5,8 +5,8 @@ import { useFormik } from "formik";
 import * as yup from "yup";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { useCreateOtp } from "@hooks/useCreateOtp";
+import { RepresentativeRegistration } from "@/models/index";
 import {
-  RepresentativeRegistration,
   useRepresentativeStore,
   useStepperStore,
 } from "@store/index";

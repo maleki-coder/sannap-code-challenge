@@ -5,10 +5,10 @@ import { useFormik } from "formik";
 import * as yup from "yup";
 import LoadingButton from "@mui/lab/LoadingButton";
 import {
-  RepresentativeRegistration,
   useRepresentativeStore,
   useStepperStore,
 } from "@store/index";
+import { RepresentativeRegistration } from "@/models/index";
 import { validateError, validateHelper } from "@utils/index";
 export function FullName() {
   const { t } = useTranslation();

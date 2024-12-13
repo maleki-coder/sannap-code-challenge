@@ -1,5 +1,5 @@
 import { FormikProps } from "formik";
-import { RepresentativeRegistration } from "@store/index";
+import { RepresentativeRegistration } from "@/models/index";
 
 /**
  * Helper method to get error message for Formik fields

@@ -1,15 +1,17 @@
 import LoadingButton from "@mui/lab/LoadingButton";
 import { Typography, useTheme } from "@mui/material";
 import Grid from "@mui/material/Grid2";
-import { useStepperStore } from "@store/index";
+import { useRepresentativeStore, useStepperStore } from "@store/index";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 export function Successful() {
+  const { resetRepresentative } = useRepresentativeStore();
   const navigate = useNavigate();
   const { setCurrentStep, setAllowedStep } = useStepperStore();
   const theme = useTheme();
   const { t } = useTranslation();
   const routeToInitialPage = () => {
+    resetRepresentative();
     navigate("/register/phonenumber");
     setCurrentStep(1);
     setAllowedStep(1);

@@ -1,7 +1,7 @@
 import { useMutation, UseMutationOptions } from "@tanstack/react-query";
 import axiosInstance from "@infra/api/axios.instance";
 import API_ENDPOINTS from "@infra/api/endPoints";
-import { RepresentativeRegistration } from "@store/useRepresentativeStore";
+import { RepresentativeRegistration } from "@/models/index";
 interface SignUpPayload extends RepresentativeRegistration {}
 
 interface SignUpResponse {
