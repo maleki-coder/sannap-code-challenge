@@ -1,18 +1,17 @@
+import { FormikProps } from "formik";
 import { RepresentativeRegistration } from "@store/index";
 
 /**
  * Helper method to get error message for Formik fields
- * @param {boolean} touched 
- * @param {string | object} errors
- * @param {string} field 
- * @returns {string}
+ * @param {FormikProps<any>} formik - The Formik object
+ * @param {keyof RepresentativeRegistration | "tempPhoneCode" | "tempPhoneNumber"} field - The name of the field
+ * @returns {string} The error message for the field if available, otherwise an empty string
  */
 export const validateHelper = (
-  touched,
-  errors,
-  field: keyof RepresentativeRegistration | "tempCode" | "tempPhoneNumber"
-) => {
-  return touched[field] && typeof errors[field] === "string"
-    ? errors[field]
+  formik: FormikProps<any>,
+  field: keyof RepresentativeRegistration | "tempPhoneCode" | "tempPhoneNumber"
+): string => {
+  return formik.touched[field] && typeof formik.errors[field] === "string"
+    ? (formik.errors[field] as string)
     : "";
 };

@@ -10,6 +10,7 @@ import {
   useRepresentativeStore,
   useStepperStore,
 } from "@store/index";
+import { validateError, validateHelper } from "@utils/index";
 export function PhoneNumber() {
   const theme = useTheme();
   const { t } = useTranslation();
@@ -27,8 +28,8 @@ export function PhoneNumber() {
   const formik = useFormik({
     initialValues: initialValues,
     validationSchema: validationSchema,
-    onSubmit: async () => {
-      await sendOtpSms({ phone_number: formik.values.phone_number });
+    onSubmit:  () => {
+       sendOtpSms({ phone_number: formik.values.phone_number });
     },
   });
   const { isPending, mutate: sendOtpSms } = useCreateOtp({
@@ -67,15 +68,11 @@ export function PhoneNumber() {
           value={formik.values.phone_number || ""}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          error={
-            formik.touched.phone_number && Boolean(formik.errors.phone_number)
-          }
-          helperText={
-            formik.touched.phone_number &&
-            typeof formik.errors.phone_number === "string"
-              ? formik.errors.phone_number
-              : ""
-          }
+          error={validateError(formik, "phone_number")}
+          helperText={validateHelper(
+            formik,
+            'phone_number'
+          )}
           required
           disabled={isPending}
         ></TextField>

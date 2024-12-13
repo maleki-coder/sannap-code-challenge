@@ -9,9 +9,10 @@ import {
   useRepresentativeStore,
   useStepperStore,
 } from "@store/index";
+import { validateError, validateHelper } from "@utils/index";
 export function FullName() {
   const { t } = useTranslation();
-  const {  updateRepresentative } = useRepresentativeStore();
+  const { updateRepresentative } = useRepresentativeStore();
   const { setCurrentStep, setAllowedStep } = useStepperStore();
   const initialValues: Pick<
     RepresentativeRegistration,
@@ -47,13 +48,11 @@ export function FullName() {
           value={formik.values.first_name || ""}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          error={formik.touched.first_name && Boolean(formik.errors.first_name)}
-          helperText={
-            formik.touched.first_name &&
-            typeof formik.errors.first_name === "string"
-              ? formik.errors.first_name
-              : ""
-          }
+          error={validateError(formik, "first_name")}
+          helperText={validateHelper(
+            formik,
+            "first_name"
+          )}
           required
         ></TextField>
         <TextField
@@ -64,13 +63,11 @@ export function FullName() {
           value={formik.values.last_name || ""}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          error={formik.touched.last_name && Boolean(formik.errors.last_name)}
-          helperText={
-            formik.touched.last_name &&
-            typeof formik.errors.last_name === "string"
-              ? formik.errors.last_name
-              : ""
-          }
+          error={validateError(formik, "last_name")}
+          helperText={validateHelper(
+            formik,
+            "last_name"
+          )}
           required
         ></TextField>
         <LoadingButton

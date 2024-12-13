@@ -1,7 +1,6 @@
 import { create } from "zustand";
 
 export interface RepresentativeRegistration {
-  address: string; // "آدرس"
   agency_type: string; // "نوع نمایندگی"
   agent_code: string; // "کد نمایندگی"
   city_code: string; // "کد شهر (کد تلفن ثابت)"

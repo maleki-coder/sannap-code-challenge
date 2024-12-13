@@ -35,8 +35,8 @@ import {
   useFetchListOfProvinces,
 } from "@hooks/index";
 import { AgentType } from "@/models";
+import { useSignUp } from "@hooks/useSignUp";
 export function ExtraInfo() {
-  const navigate = useNavigate();
   const theme = useTheme();
   const { t } = useTranslation();
   const { updateRepresentative, representative } = useRepresentativeStore();
@@ -44,45 +44,45 @@ export function ExtraInfo() {
   const [isLegalFieldVisible, setIsLegalFieldVisible] = useState(false);
   const initialValues: Omit<
     RepresentativeRegistration,
-    "code" | "first_name" | "last_name"
-  > & {
-    tempCode: string;
-    tempPhoneNumber: string;
-  } = {
+    "first_name" | "last_name" | "phone_number"
+  > = {
     agent_code: "",
-    address: "",
-    agency_type: AgentType.REAL,
-    city_code: "",
+    province: "",
     county_code: "",
     insurance_branch: "",
+    agency_type: AgentType.REAL,
+    city_code: "",
     phone: "",
-    phone_number: "",
-    province: "",
     name: "",
-    tempCode: "",
-    tempPhoneNumber: "",
   };
   const validationSchema = yup.object({
     agent_code: yup.string().required(t("extraInfo.agent_code_required")),
     province: yup.string().required(t("extraInfo.province_required")),
-    city_code: yup.string().required(t("extraInfo.city_required")),
+    county_code: yup.string().required(t("extraInfo.county_required")),
+    city_code: yup.string().required(t("extraInfo.city_code_required")),
     insurance_branch: yup
       .string()
       .required(t("extraInfo.insurance_branch_required")),
-    name: yup.string().when("agent_type", {
+    phone: yup.string().required(t("extraInfo.phone_required")),
+    name: yup.string().when("agency_type", {
       is: "legal",
       then: (schema) => schema.required(t("extraInfo.agent_name_required")),
       otherwise: (schema) => schema.notRequired(),
     }),
   });
+  const { isPending : isSignIpPending , mutate: signUp } = useSignUp();
   const formik = useFormik({
     initialValues: initialValues,
     validationSchema: validationSchema,
     onSubmit: () => {
-      updateRepresentative({
-        agent_code: formik.values.agent_code,
+      const { ...restValues } = formik.values;
+      const { first_name, last_name, phone_number } = representative;
+      signUp({
+        ...restValues,
+        first_name,
+        last_name,
+        phone_number,
       });
-      console.log(representative);
     },
   });
   const [isAgencyCodeDuplicate, setIsAgencyCodeDuplicate] = useState(false);
@@ -116,15 +116,21 @@ export function ExtraInfo() {
   }, [formik.values.agent_code, checkAgencyCode]);
 
   function handleProvinceChange(code: string | null): void {
-    formik.setFieldValue("province", code);
-    formik.setFieldValue("city_code", null);
-    formik.setFieldValue("insurance_branch", null);
+    formik.setValues({
+      ...formik.values,
+      province: code,
+      county_code: null,
+      insurance_branch: null,
+    });
   }
 
-  const handleAgentTypeChange = (agentType: AgentType): void => {
-    agentType == AgentType.LEGAL
-      ? setIsLegalFieldVisible(true)
-      : setIsLegalFieldVisible(false);
+  const handleAgentTypeChange = (agencyType: AgentType): void => {
+    formik.setValues({
+      ...formik.values,
+      agency_type: agencyType,
+      name: "",
+    });
+    setIsLegalFieldVisible(agencyType === AgentType.LEGAL);
   };
   return (
     <>
@@ -135,15 +141,12 @@ export function ExtraInfo() {
           label={t("extraInfo.agent_code")}
           name="agent_code"
           id="agent_code"
+          type="tel"
           value={formik.values.agent_code || ""}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          error={validateError(formik.touched, formik.errors, "agent_code")}
-          helperText={validateHelper(
-            formik.touched,
-            formik.errors,
-            "agent_code"
-          )}
+          error={validateError(formik, "agent_code")}
+          helperText={validateHelper(formik, "agent_code")}
           slotProps={{
             htmlInput: {
               dir: "ltr",
@@ -177,12 +180,8 @@ export function ExtraInfo() {
             <TextField
               name="province"
               id="province"
-              error={validateError(formik.touched, formik.errors, "province")}
-              helperText={validateHelper(
-                formik.touched,
-                formik.errors,
-                "province"
-              )}
+              error={validateError(formik, "province")}
+              helperText={validateHelper(formik, "province")}
               {...params}
               label={t("extraInfo.province")}
             />
@@ -192,7 +191,7 @@ export function ExtraInfo() {
           fullWidth
           disablePortal
           onChange={(event, option) =>
-            formik.setFieldValue("city_code", option?.code)
+            formik.setFieldValue("county_code", option?.code)
           }
           disabled={!formik.values.province}
           onBlur={formik.handleBlur}
@@ -200,16 +199,12 @@ export function ExtraInfo() {
           getOptionLabel={(option) => option.translation}
           renderInput={(params) => (
             <TextField
-              name="city_code"
-              id="city_code"
-              error={validateError(formik.touched, formik.errors, "city_code")}
-              helperText={validateHelper(
-                formik.touched,
-                formik.errors,
-                "city_code"
-              )}
+              name="county_code"
+              id="county_code"
+              error={validateError(formik, "county_code")}
+              helperText={validateHelper(formik, "county_code")}
               {...params}
-              label={t("extraInfo.city")}
+              label={t("extraInfo.county")}
             />
           )}
         />
@@ -227,16 +222,8 @@ export function ExtraInfo() {
             <TextField
               name="insurance_branch"
               id="insurance_branch"
-              error={validateError(
-                formik.touched,
-                formik.errors,
-                "insurance_branch"
-              )}
-              helperText={validateHelper(
-                formik.touched,
-                formik.errors,
-                "insurance_branch"
-              )}
+              error={validateError(formik, "insurance_branch")}
+              helperText={validateHelper(formik, "insurance_branch")}
               onChange={(e) => setBranchSearchTerm(e.target.value)}
               {...params}
               label={t("extraInfo.insurance_branch")}
@@ -252,18 +239,14 @@ export function ExtraInfo() {
           <Grid size={{ xs: 3 }}>
             <TextField
               fullWidth
-              // label={t("extraInfo.tempCode")}
-              name="tempCode"
-              id="tempCode"
-              value={formik.values.tempCode || ""}
+              name="city_code"
+              id="city_code"
+              type="tel"
+              value={formik.values.city_code || ""}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              error={validateError(formik.touched, formik.errors, "tempCode")}
-              helperText={validateHelper(
-                formik.touched,
-                formik.errors,
-                "tempCode"
-              )}
+              error={validateError(formik, "city_code")}
+              helperText={validateHelper(formik, "city_code")}
               slotProps={{
                 htmlInput: {
                   dir: "ltr",
@@ -275,22 +258,15 @@ export function ExtraInfo() {
           <Grid size={{ xs: 9 }}>
             <TextField
               fullWidth
-              label={t("extraInfo.phoneNumber")}
-              name="tempPhoneNumber"
-              id="tempPhoneNumber"
-              value={formik.values.tempPhoneNumber || ""}
+              label={t("extraInfo.phone")}
+              name="phone"
+              id="phone"
+              type="tel"
+              value={formik.values.phone || ""}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              error={validateError(
-                formik.touched,
-                formik.errors,
-                "tempPhoneNumber"
-              )}
-              helperText={validateHelper(
-                formik.touched,
-                formik.errors,
-                "tempPhoneNumber"
-              )}
+              error={validateError(formik, "phone")}
+              helperText={validateHelper(formik, "phone")}
               slotProps={{
                 htmlInput: {
                   dir: "ltr",
@@ -311,6 +287,7 @@ export function ExtraInfo() {
             row
             aria-labelledby="agency_type"
             name="agency_type_group"
+            value={formik.values.agency_type}
             onChange={(e) => handleAgentTypeChange(e.target.value as AgentType)}
           >
             <StyledFormControlLabel
@@ -334,18 +311,19 @@ export function ExtraInfo() {
             value={formik.values.name || ""}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            error={validateError(formik.touched, formik.errors, "name")}
-            helperText={validateHelper(formik.touched, formik.errors, "name")}
+            error={validateError(formik, "name")}
+            helperText={validateHelper(formik, "name")}
             required
           ></TextField>
         )}
         <LoadingButton
           fullWidth
+          loading={isSignIpPending}
           type="submit"
           disabled={!formik.isValid || !formik.dirty || !isAgencyCodeDuplicate}
           variant="dayGreen"
         >
-          {t("general.continue")}
+          {t("general.signUp")}
         </LoadingButton>
       </StyledForm>
     </>

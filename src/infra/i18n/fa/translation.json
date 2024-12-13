@@ -1,6 +1,7 @@
 {
   "general": {
-    "continue": "ادامه"
+    "continue": "ادامه",
+    "signUp" : "ثبت نام"
   },
   "phoneNumber": {
     "title": "شماره موبایل خود را وارد کنید.",
@@ -23,17 +24,19 @@
     "agent_code": "کد نمایندگی",
     "agent_code_required": "لطفا کد نمایندگی را وارد کنید",
     "province": "استان",
-    "insurance_branch": "شعبه بیمه",
-    "city": "شهر",
     "province_required": "لطفا استان خود را انتخاب کنید",
-    "city_required": "لطفا شهر خود را انتخاب کنید",
-    "agent_name_required" : "نام نمایندگی را وارد کنید",
+    "insurance_branch": "شعبه بیمه",
     "insurance_branch_required" : "لطفا شعبه را انتخاب کنید",
-    "phoneNumber":  "تلفن ثابت",
+    "county": "شهر",
+    "county_required": "لطفا شهر خود را انتخاب کنید",
+    "agent_name" : "نام نمایندگی",
+    "agent_name_required" : "نام نمایندگی را وارد کنید",
+    "phone":  "تلفن ثابت",
+    "phone_required" : "لطفا شماره تلفن ثابت خود را وارد کنید",
+    "city_code_required" : "لطفا کد شهر را وارد کنید",
     "enter_agency_code" : "کد نمابندگی را وارد کنید",
     "agency_type" : "نوع نمایندگی:",
     "legal" : "حقوقی",
-    "real" : "حقیقی",
-    "agent_name" : "نام نمایندگی"
+    "real" : "حقیقی"
   }
 }

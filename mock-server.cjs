@@ -250,6 +250,14 @@ app.post(`/DEY/agent/verification/signup/check_agency_code`, (req, res) => {
     });
   }, 1000);
 });
+app.post(`/DEY/agent/verification/signup`, (req, res) => {
+  setTimeout(() => {
+    res.status(200).json({
+      message: "This is a delayed mock response for signup",
+      success: true,
+    });
+  }, 2000);
+});
 
 // Start the server
 app.listen(port, () => {

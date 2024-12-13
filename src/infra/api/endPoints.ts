@@ -5,7 +5,8 @@ const API_ENDPOINTS = {
   checkAgencyCode: "/DEY/agent/verification/signup/check_agency_code",
   listOfProvinces: "/base/provinces_wop",
   listOfCities: "/base/counties_wop",
-  listOfBranches: "/selection_item/insurance_branch/wop_list"
+  listOfBranches: "/selection_item/insurance_branch/wop_list",
+  signUp: "/DEY/agent/verification/signup",
 };
 
 export default API_ENDPOINTS;

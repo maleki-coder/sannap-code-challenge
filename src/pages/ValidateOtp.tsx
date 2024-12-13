@@ -23,7 +23,7 @@ export function ValidateOtp() {
 
   const formik = useFormik({
     initialValues: initialValues,
-    onSubmit: async () => {
+    onSubmit: () => {
       validateOtp({
         code: Number(formik.values.code),
         phone_number: representative.phone_number,
