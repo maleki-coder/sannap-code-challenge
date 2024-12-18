@@ -6,16 +6,14 @@ import * as yup from "yup";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { useCreateOtp } from "@hooks/useCreateOtp";
 import { RepresentativeRegistration } from "@/models/index";
-import {
-  useRepresentativeStore,
-  useStepperStore,
-} from "@store/index";
-import { validateError, validateHelper } from "@utils/index";
+import { useRepresentativeStore, useStepperStore } from "@store/index";
+import { showSnackbar, validateError, validateHelper } from "@utils/index";
+import { CustomAxiosError } from "@infra/index";
 export function PhoneNumber() {
   const theme = useTheme();
   const { t } = useTranslation();
   const { updateRepresentative } = useRepresentativeStore();
-  const {setCurrentStep, setAllowedStep} = useStepperStore();
+  const { setCurrentStep, setAllowedStep } = useStepperStore();
   const initialValues: Pick<RepresentativeRegistration, "phone_number"> = {
     phone_number: null,
   };
@@ -28,8 +26,8 @@ export function PhoneNumber() {
   const formik = useFormik({
     initialValues: initialValues,
     validationSchema: validationSchema,
-    onSubmit:  () => {
-       sendOtpSms({ phone_number: formik.values.phone_number });
+    onSubmit: () => {
+      sendOtpSms({ phone_number: formik.values.phone_number });
     },
   });
   const { isPending, mutate: sendOtpSms } = useCreateOtp({
@@ -37,6 +35,11 @@ export function PhoneNumber() {
       updateRepresentative({ phone_number: formik.values.phone_number });
       setCurrentStep(2);
       setAllowedStep(2);
+    },
+    onError: (error) => {
+      showSnackbar(error.response.data.error_details.fa_details, {
+        variant: "error",
+      });
     },
   });
   return (
@@ -69,10 +72,7 @@ export function PhoneNumber() {
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           error={validateError(formik, "phone_number")}
-          helperText={validateHelper(
-            formik,
-            'phone_number'
-          )}
+          helperText={validateHelper(formik, "phone_number")}
           required
           disabled={isPending}
         ></TextField>

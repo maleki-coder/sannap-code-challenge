@@ -45,8 +45,8 @@ export function ExtraInfo() {
     "first_name" | "last_name" | "phone_number"
   > = {
     agent_code: "",
-    province: "",
-    county_code: "",
+    province: null,
+    county: "",
     insurance_branch: "",
     agency_type: AgentType.REAL,
     city_code: "",
@@ -56,7 +56,7 @@ export function ExtraInfo() {
   const validationSchema = yup.object({
     agent_code: yup.string().required(t("extraInfo.agent_code_required")),
     province: yup.string().required(t("extraInfo.province_required")),
-    county_code: yup.string().required(t("extraInfo.county_required")),
+    county: yup.string().required(t("extraInfo.county_required")),
     city_code: yup.string().required(t("extraInfo.city_code_required")),
     insurance_branch: yup
       .string()
@@ -76,6 +76,7 @@ export function ExtraInfo() {
       const { first_name, last_name, phone_number } = representative;
       signUp({
         ...restValues,
+        address: "",
         first_name,
         last_name,
         phone_number,
@@ -94,15 +95,18 @@ export function ExtraInfo() {
     onSuccess: () => {
       setIsAgencyCodeDuplicate(true);
     },
-    onError: (data: any) => {
-      showSnackbar(data.response.data.message, { variant: "error" });
+    onError: (error) => {
+      showSnackbar(error.response.data.error_details.fa_details, {
+        variant: "error",
+      });
       setIsAgencyCodeDuplicate(false);
     },
   });
   const { data: provinces } = useFetchListOfProvinces();
-  const { data: cities } = useFetchListOfCities(formik.values.province);
+  const { isPending: isFetchCitiesPending, data: cities } =
+    useFetchListOfCities(formik.values.province);
   const { data: branches } = useFetchListBranches(
-    formik.values.province,
+    // formik.values.province,
     branchSearchTerm
   );
   const handleClearAgentCode = () => {
@@ -119,11 +123,11 @@ export function ExtraInfo() {
     return () => clearTimeout(timeoutId);
   }, [formik.values.agent_code, checkAgencyCode]);
 
-  function handleProvinceChange(code: string | null): void {
+  function handleProvinceChange(id: number): void {
     formik.setValues({
       ...formik.values,
-      province: code,
-      county_code: null,
+      province: id,
+      county: null,
       insurance_branch: null,
     });
   }
@@ -176,10 +180,10 @@ export function ExtraInfo() {
         <Autocomplete
           fullWidth
           disablePortal
-          onChange={(event, option) => handleProvinceChange(option?.code)}
+          onChange={(event, option) => handleProvinceChange(option?.id)}
           onBlur={formik.handleBlur}
-          options={provinces?.data || []}
-          getOptionLabel={(option) => option.translation}
+          options={provinces || []}
+          getOptionLabel={(option) => option.name}
           renderInput={(params) => (
             <TextField
               name="province"
@@ -195,18 +199,19 @@ export function ExtraInfo() {
           fullWidth
           disablePortal
           onChange={(event, option) =>
-            formik.setFieldValue("county_code", option?.code)
+            formik.setFieldValue("county", option?.id)
           }
           disabled={!formik.values.province}
           onBlur={formik.handleBlur}
-          options={cities?.data || []}
-          getOptionLabel={(option) => option.translation}
+          options={cities || []}
+          loading={isFetchCitiesPending}
+          getOptionLabel={(option) => option.name}
           renderInput={(params) => (
             <TextField
-              name="county_code"
-              id="county_code"
-              error={validateError(formik, "county_code")}
-              helperText={validateHelper(formik, "county_code")}
+              name="county"
+              id="county"
+              error={validateError(formik, "county")}
+              helperText={validateHelper(formik, "county")}
               {...params}
               label={t("extraInfo.county")}
             />
@@ -216,14 +221,15 @@ export function ExtraInfo() {
           fullWidth
           disablePortal
           onChange={(event, option) =>
-            formik.setFieldValue("insurance_branch", option?.code)
+            formik.setFieldValue("insurance_branch", option?.id)
           }
           disabled={!formik.values.province}
           onBlur={formik.handleBlur}
-          options={branches?.data || []}
-          getOptionLabel={(option) => option.translation}
+          options={branches || []}
+          getOptionLabel={(option) => option.name}
           renderInput={(params) => (
             <TextField
+              key={params.id}
               name="insurance_branch"
               id="insurance_branch"
               error={validateError(formik, "insurance_branch")}

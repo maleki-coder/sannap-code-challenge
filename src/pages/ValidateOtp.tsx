@@ -6,6 +6,7 @@ import OtpInput from "react-otp-input";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { useValidateOtp } from "@hooks/useValidateOtp";
 import { useRepresentativeStore, useStepperStore } from "@store/index";
+import { showSnackbar } from "@utils/snackBarUtils";
 export function ValidateOtp() {
   const { setCurrentStep, setAllowedStep } = useStepperStore();
   const { representative } = useRepresentativeStore();
@@ -14,6 +15,9 @@ export function ValidateOtp() {
       setCurrentStep(3);
       setAllowedStep(3);
     },
+    onError : (error) => {
+      showSnackbar(error.response.data.error_details.fa_details , {variant : 'error'})
+    }
   });
   const theme = useTheme();
   const { t } = useTranslation();
@@ -25,7 +29,8 @@ export function ValidateOtp() {
     initialValues: initialValues,
     onSubmit: () => {
       validateOtp({
-        code: Number(formik.values.code),
+        // code: Number(formik.values.code),
+        code: 55555,
         phone_number: representative.phone_number,
       });
     },

@@ -1,6 +1,7 @@
 import { useMutation, UseMutationOptions } from "@tanstack/react-query";
-import axiosInstance from "@infra/api/axios.instance";
+import axiosInstance, { ErrorData } from "@infra/api/axios.instance";
 import API_ENDPOINTS from "@infra/api/endPoints";
+import { AxiosError } from "axios";
 interface CreateOtpPayload {
   phone_number: string;
 }
@@ -18,12 +19,12 @@ interface CreateOtpPayload {
 export const useCreateOtp = (
   options?: UseMutationOptions<
     CreateOtpResponse,
-    Error,
+    AxiosError<ErrorData>,
     CreateOtpPayload,
     unknown
   >
 ) => {
-  return useMutation<CreateOtpResponse, Error, CreateOtpPayload>({
+  return useMutation<CreateOtpResponse, AxiosError<ErrorData>, CreateOtpPayload>({
     mutationFn: async (payload: CreateOtpPayload) => {
       const response = await axiosInstance.post(
         API_ENDPOINTS.sendOtpSms,

@@ -1,6 +1,7 @@
-import { useMutation, UseMutationOptions } from "@tanstack/react-query";
-import axiosInstance from "@infra/api/axios.instance";
+import { useMutation } from "@tanstack/react-query";
+import axiosInstance, { ErrorData } from "@infra/api/axios.instance";
 import API_ENDPOINTS from "@infra/api/endPoints";
+import { AxiosError } from "axios";
 interface CheckAgencyCodePayload {
   agent_code: string;
 }
@@ -12,14 +13,9 @@ interface CheckAgencyCodeResponse {
 }
 
 export const useCheckAgencyCode = (
-  options?: UseMutationOptions<
-    CheckAgencyCodeResponse,
-    Error,
-    CheckAgencyCodePayload,
-    unknown
-  >
+  options?: any
 ) => {
-  return useMutation<CheckAgencyCodeResponse, Error, CheckAgencyCodePayload>({
+  return useMutation<CheckAgencyCodeResponse, AxiosError<ErrorData>, CheckAgencyCodePayload>({
     mutationFn: async (payload: CheckAgencyCodePayload) => {
       const response = await axiosInstance.post(
         API_ENDPOINTS.checkAgencyCode,

@@ -1,4 +1,4 @@
-import { useMutation, UseMutationOptions } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import axiosInstance from "@infra/api/axios.instance";
 import API_ENDPOINTS from "@infra/api/endPoints";
 import { RepresentativeRegistration } from "@/models/index";
@@ -11,11 +11,10 @@ interface SignUpResponse {
 }
 
 export const useSignUp = (
-  options?: UseMutationOptions<SignUpResponse, Error, SignUpPayload, unknown>
+  options?: any
 ) => {
   return useMutation<SignUpResponse, Error, SignUpPayload>({
     mutationFn: async (payload: SignUpPayload) => {
-        console.log(payload);
       const response = await axiosInstance.post(
         API_ENDPOINTS.signUp,
         payload

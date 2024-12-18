@@ -1,37 +1,30 @@
-import { useQuery, UseQueryOptions } from "@tanstack/react-query";
-import axiosInstance from "@infra/api/axios.instance";
+import { useQuery } from "@tanstack/react-query";
+import axiosInstance, { ErrorData } from "@infra/api/axios.instance";
 import API_ENDPOINTS from "@infra/api/endPoints";
+import { AxiosError } from "axios";
 
 interface FetchBranchesListResponse {
-  success: boolean;
-  message: string;
-  data?: Array<{
-    code: string;
-    name: string;
-    translation?: string;
-  }>;
+  county: number;
+  id: number;
+  insurance: number;
+  name: string;
+  province: number;
 }
 
-export const useFetchListBranches = (
-  province_code: string,
-  search_query: string,
-  options?: UseQueryOptions<FetchBranchesListResponse, Error>
-) => {
-  return useQuery<FetchBranchesListResponse, Error>({
-    queryKey: ["getBranches", province_code, search_query],
+export const useFetchListBranches = (name: string, options?: any) => {
+  return useQuery<Array<FetchBranchesListResponse>, AxiosError<ErrorData>>({
+    queryKey: ["getBranches", name],
     queryFn: async () => {
-      if (!province_code) {
-        return { success: true, message: "No province selected", data: [] };
-      }
-      if (!search_query) {
-        return { success: true, message: "No Search query", data: [] };
-      }
       const response = await axiosInstance.get(API_ENDPOINTS.listOfBranches, {
-        params: { province_code: province_code, search_query: search_query },
+        params: {
+          province: 8,
+          name: name,
+          insurance: "DEY",
+        },
       });
-      return response.data;
+      return response.data['response'];
     },
-    enabled: !!province_code,
+    enabled: !!name,
     ...options,
   });
 };
