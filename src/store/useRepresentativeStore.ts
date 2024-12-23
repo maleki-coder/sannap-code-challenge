@@ -21,7 +21,7 @@ export const useRepresentativeStore = create<RepresentativeStore>((set) => {
     phone_number: "",
     province: "",
     name: "",
-    county_code: "",
+    county: "",
   };
 
   return {

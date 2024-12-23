@@ -8,7 +8,7 @@ export interface RepresentativeRegistration {
   last_name: string; // "نام خانوادگی"
   phone: string; // "تلفن ثابت"
   phone_number: string; // "09000000009"
-  province:  number; // "آیدی استان انتخاب شده"
+  province: string; // "آیدی استان انتخاب شده"
   name: string; // "نام نمایندگی اگر حقوقی بود",
   address? : string,
 }

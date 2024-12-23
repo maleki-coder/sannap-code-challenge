@@ -1,5 +1,5 @@
-import { useQuery, UseQueryOptions } from "@tanstack/react-query";
-import axiosInstance, { ErrorData } from "@infra/api/axios.instance";
+import { useQuery } from "@tanstack/react-query";
+import axiosInstance from "@infra/api/axios.instance";
 import API_ENDPOINTS from "@infra/api/endPoints";
 import { AxiosError } from "axios";
 
@@ -12,7 +12,7 @@ interface GetProvincesResponse {
     last_name: string;
     username: string;
   };
-  id: number;
+  id: string;
   is_active: boolean;
   name: string;
   name_split: string;

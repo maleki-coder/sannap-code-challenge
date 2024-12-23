@@ -1,12 +1,5 @@
-import {
-  Autocomplete,
-  CircularProgress,
-  FormControl,
-  TextField,
-  useTheme,
-} from "@mui/material";
+import { FormControl, useTheme } from "@mui/material";
 import Grid from "@mui/material/Grid2";
-import { validateError, validateHelper } from "@utils/index";
 import { StyledForm } from "@/pages/phoneNumber/index";
 import {
   StyledFormControlLabel,
@@ -20,32 +13,27 @@ import * as yup from "yup";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { RepresentativeRegistration } from "@/models/index";
 import { useRepresentativeStore, useStepperStore } from "@store/index";
-import HighlightOffIcon from "@mui/icons-material/HighlightOff";
-import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
-import { StyledAdorment } from "@components/index";
-import { useCheckAgencyCode } from "@hooks/useCheckAgencyCode";
-import { useEffect, useState } from "react";
-import { showSnackbar } from "@utils/index";
-import {
-  useFetchListBranches,
-  useFetchListOfCities,
-  useFetchListOfProvinces,
-} from "@hooks/index";
+import { ValidatedTextField } from "@components/index";
+import { useState } from "react";
 import { AgentType } from "@/models";
 import { useSignUp } from "@hooks/useSignUp";
+import AgencyCodeTextField from "./components/AgencyCodeTextField";
+import ProvinceAutoComplete from "./components/ProvinceAutoComplete";
+import CountyAutoComplete from "./components/CountyAutoComplete";
+import { InsuranceBranchAutoComplete } from "./components/InsuranceBranchAutoComplete";
 export function ExtraInfo() {
   const theme = useTheme();
   const { t } = useTranslation();
   const { updateRepresentative, representative } = useRepresentativeStore();
   const { setCurrentStep, setAllowedStep } = useStepperStore();
-  const [branchSearchTerm, setBranchSearchTerm] = useState("");
+
   const [isLegalFieldVisible, setIsLegalFieldVisible] = useState(false);
   const initialValues: Omit<
     RepresentativeRegistration,
     "first_name" | "last_name" | "phone_number"
   > = {
     agent_code: "",
-    province: null,
+    province: "",
     county: "",
     insurance_branch: "",
     agency_type: AgentType.REAL,
@@ -90,47 +78,6 @@ export function ExtraInfo() {
       setAllowedStep(5);
     },
   });
-  const [isAgencyCodeDuplicate, setIsAgencyCodeDuplicate] = useState(false);
-  const { isPending, mutate: checkAgencyCode } = useCheckAgencyCode({
-    onSuccess: () => {
-      setIsAgencyCodeDuplicate(true);
-    },
-    onError: (error) => {
-      showSnackbar(error.response.data.error_details.fa_details, {
-        variant: "error",
-      });
-      setIsAgencyCodeDuplicate(false);
-    },
-  });
-  const { data: provinces } = useFetchListOfProvinces();
-  const { isPending: isFetchCitiesPending, data: cities } =
-    useFetchListOfCities(formik.values.province);
-  const { data: branches } = useFetchListBranches(
-    // formik.values.province,
-    branchSearchTerm
-  );
-  const handleClearAgentCode = () => {
-    formik.setFieldValue("agent_code", "");
-  };
-  // this effect works as debouncer to prevent repetetive api calls
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      if (formik.values.agent_code) {
-        checkAgencyCode({ agent_code: formik.values.agent_code });
-      }
-    }, 500);
-
-    return () => clearTimeout(timeoutId);
-  }, [formik.values.agent_code, checkAgencyCode]);
-
-  function handleProvinceChange(id: number): void {
-    formik.setValues({
-      ...formik.values,
-      province: id,
-      county: null,
-      insurance_branch: null,
-    });
-  }
 
   const handleAgentTypeChange = (agencyType: AgentType): void => {
     formik.setValues({
@@ -143,103 +90,10 @@ export function ExtraInfo() {
   return (
     <>
       <StyledForm onSubmit={formik.handleSubmit} noValidate autoComplete="on">
-        <TextField
-          fullWidth
-          // placeholder={t("extraInfo.enter_agency_code")}
-          label={t("extraInfo.agent_code")}
-          name="agent_code"
-          id="agent_code"
-          type="tel"
-          value={formik.values.agent_code || ""}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          error={validateError(formik, "agent_code")}
-          helperText={validateHelper(formik, "agent_code")}
-          slotProps={{
-            htmlInput: {
-              dir: "ltr",
-            },
-            input: {
-              startAdornment: (
-                <StyledAdorment position="start">
-                  <HighlightOffIcon onClick={handleClearAgentCode} />
-                  {isPending && <CircularProgress size={20} />}
-                  {isAgencyCodeDuplicate &&
-                    !isPending &&
-                    formik.values.agent_code && (
-                      <CheckCircleOutlineIcon
-                        sx={{ color: theme.palette["customGreen2"].main }}
-                      />
-                    )}
-                </StyledAdorment>
-              ),
-            },
-          }}
-          required
-        ></TextField>
-        <Autocomplete
-          fullWidth
-          disablePortal
-          onChange={(event, option) => handleProvinceChange(option?.id)}
-          onBlur={formik.handleBlur}
-          options={provinces || []}
-          getOptionLabel={(option) => option.name}
-          renderInput={(params) => (
-            <TextField
-              name="province"
-              id="province"
-              error={validateError(formik, "province")}
-              helperText={validateHelper(formik, "province")}
-              {...params}
-              label={t("extraInfo.province")}
-            />
-          )}
-        />
-        <Autocomplete
-          fullWidth
-          disablePortal
-          onChange={(event, option) =>
-            formik.setFieldValue("county", option?.id)
-          }
-          disabled={!formik.values.province}
-          onBlur={formik.handleBlur}
-          options={cities || []}
-          loading={isFetchCitiesPending}
-          getOptionLabel={(option) => option.name}
-          renderInput={(params) => (
-            <TextField
-              name="county"
-              id="county"
-              error={validateError(formik, "county")}
-              helperText={validateHelper(formik, "county")}
-              {...params}
-              label={t("extraInfo.county")}
-            />
-          )}
-        />
-        <Autocomplete
-          fullWidth
-          disablePortal
-          onChange={(event, option) =>
-            formik.setFieldValue("insurance_branch", option?.id)
-          }
-          disabled={!formik.values.province}
-          onBlur={formik.handleBlur}
-          options={branches || []}
-          getOptionLabel={(option) => option.name}
-          renderInput={(params) => (
-            <TextField
-              key={params.id}
-              name="insurance_branch"
-              id="insurance_branch"
-              error={validateError(formik, "insurance_branch")}
-              helperText={validateHelper(formik, "insurance_branch")}
-              onChange={(e) => setBranchSearchTerm(e.target.value)}
-              {...params}
-              label={t("extraInfo.insurance_branch")}
-            />
-          )}
-        />
+        <AgencyCodeTextField formik={formik} />
+        <ProvinceAutoComplete formik={formik} />
+        <CountyAutoComplete formik={formik} />
+        <InsuranceBranchAutoComplete formik={formik} />
         <Grid
           container
           direction={"row-reverse"}
@@ -247,50 +101,31 @@ export function ExtraInfo() {
           spacing={theme.spacing(2)}
         >
           <Grid size={{ xs: 3 }}>
-            <TextField
-              fullWidth
+            <ValidatedTextField
+              formik={formik}
               name="city_code"
-              id="city_code"
-              type="tel"
-              value={formik.values.city_code || ""}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={validateError(formik, "city_code")}
-              helperText={validateHelper(formik, "city_code")}
-              slotProps={{
-                htmlInput: {
-                  dir: "ltr",
-                },
-              }}
               required
-            ></TextField>
+              fullWidth
+              type="tel"
+              id="city_code"
+              dir={"ltr"}
+            />
           </Grid>
           <Grid size={{ xs: 9 }}>
-            <TextField
-              fullWidth
-              label={t("extraInfo.phone")}
+            <ValidatedTextField
+              formik={formik}
               name="phone"
-              id="phone"
-              type="tel"
-              value={formik.values.phone || ""}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={validateError(formik, "phone")}
-              helperText={validateHelper(formik, "phone")}
-              slotProps={{
-                htmlInput: {
-                  dir: "ltr",
-                },
-              }}
+              translationLabel={t("extraInfo.phone")}
               required
-            ></TextField>
+              fullWidth
+              type="tel"
+              id="phone"
+              dir={"ltr"}
+            />
           </Grid>
         </Grid>
         <FormControl fullWidth>
-          <StyledFormLabel
-            sx={{ marginInlineStart: theme.spacing(1.5) }}
-            id="agency_type"
-          >
+          <StyledFormLabel id="agency_type">
             {t("extraInfo.agency_type")}
           </StyledFormLabel>
           <StyledRadioGroup
@@ -313,23 +148,20 @@ export function ExtraInfo() {
           </StyledRadioGroup>
         </FormControl>
         {isLegalFieldVisible && (
-          <TextField
-            fullWidth
-            label={t("extraInfo.agent_name")}
+          <ValidatedTextField
+            formik={formik}
             name="name"
             id="name"
-            value={formik.values.name || ""}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={validateError(formik, "name")}
-            helperText={validateHelper(formik, "name")}
+            translationLabel={t("extraInfo.agent_name")}
             required
-          ></TextField>
+            fullWidth
+          />
         )}
         <LoadingButton
           fullWidth
           loading={isSignIpPending}
           type="submit"
+          // needs to be exposed out //////////////////////////////////////
           disabled={!formik.isValid || !formik.dirty || !isAgencyCodeDuplicate}
           variant="dayGreen"
         >
