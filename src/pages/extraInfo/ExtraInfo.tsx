@@ -9,53 +9,28 @@ import {
 } from "@/pages/extraInfo/index";
 import { useTranslation } from "react-i18next";
 import { useFormik } from "formik";
-import * as yup from "yup";
-import LoadingButton from "@mui/lab/LoadingButton";
-import { RepresentativeRegistration } from "@/models/index";
 import { useRepresentativeStore, useStepperStore } from "@store/index";
-import { ValidatedTextField } from "@components/index";
+import { DayGreenLoadingButton, ValidatedTextField } from "@components/index";
 import { useState } from "react";
-import { AgentType } from "@/models";
+import { AgentType, RepresentativeRegistration } from "@/models";
 import { useSignUp } from "@hooks/useSignUp";
 import AgencyCodeTextField from "./components/AgencyCodeTextField";
 import ProvinceAutoComplete from "./components/ProvinceAutoComplete";
 import CountyAutoComplete from "./components/CountyAutoComplete";
 import { InsuranceBranchAutoComplete } from "./components/InsuranceBranchAutoComplete";
+import useExtraInfoValidationSchema from "./validation/useExtraInfoValidationSchema";
+import initialValues from "./initialValues";
+import { showSnackbar, translateErrorMessage } from "@utils/index";
+import { ErrorData } from "@infra/index";
+import { AxiosError } from "axios";
 export function ExtraInfo() {
   const theme = useTheme();
   const { t } = useTranslation();
   const { updateRepresentative, representative } = useRepresentativeStore();
-  const { setCurrentStep, setAllowedStep } = useStepperStore();
-
+  const { setCurrentStep } = useStepperStore();
+  const [isAgencyCodeDuplicate, setIsAgencyCodeDuplicate] = useState<boolean>();
   const [isLegalFieldVisible, setIsLegalFieldVisible] = useState(false);
-  const initialValues: Omit<
-    RepresentativeRegistration,
-    "first_name" | "last_name" | "phone_number"
-  > = {
-    agent_code: "",
-    province: "",
-    county: "",
-    insurance_branch: "",
-    agency_type: AgentType.REAL,
-    city_code: "",
-    phone: "",
-    name: "",
-  };
-  const validationSchema = yup.object({
-    agent_code: yup.string().required(t("extraInfo.agent_code_required")),
-    province: yup.string().required(t("extraInfo.province_required")),
-    county: yup.string().required(t("extraInfo.county_required")),
-    city_code: yup.string().required(t("extraInfo.city_code_required")),
-    insurance_branch: yup
-      .string()
-      .required(t("extraInfo.insurance_branch_required")),
-    phone: yup.string().required(t("extraInfo.phone_required")),
-    name: yup.string().when("agency_type", {
-      is: "legal",
-      then: (schema) => schema.required(t("extraInfo.agent_name_required")),
-      otherwise: (schema) => schema.notRequired(),
-    }),
-  });
+  const validationSchema = useExtraInfoValidationSchema(t);
   const formik = useFormik({
     initialValues: initialValues,
     validationSchema: validationSchema,
@@ -75,22 +50,39 @@ export function ExtraInfo() {
     onSuccess: () => {
       updateRepresentative({ ...formik.values });
       setCurrentStep(5);
-      setAllowedStep(5);
+    },
+    onError: (error: AxiosError<ErrorData>) => {
+      showSnackbar(
+        translateErrorMessage(
+          error.response.data,
+          error.response.data.error_details
+            .attr as keyof RepresentativeRegistration
+        ),
+        {
+          variant: "error",
+        }
+      );
     },
   });
 
+  const handleIsAgencyCodeDuplicate = (isAgencyCodeDuplicate: boolean) => {
+    setIsAgencyCodeDuplicate(isAgencyCodeDuplicate);
+  };
   const handleAgentTypeChange = (agencyType: AgentType): void => {
     formik.setValues({
       ...formik.values,
       agency_type: agencyType,
-      name: "",
+      name: null,
     });
     setIsLegalFieldVisible(agencyType === AgentType.LEGAL);
   };
   return (
     <>
       <StyledForm onSubmit={formik.handleSubmit} noValidate autoComplete="on">
-        <AgencyCodeTextField formik={formik} />
+        <AgencyCodeTextField
+          formik={formik}
+          passIsAgencyCodeDuplicate={handleIsAgencyCodeDuplicate}
+        />
         <ProvinceAutoComplete formik={formik} />
         <CountyAutoComplete formik={formik} />
         <InsuranceBranchAutoComplete formik={formik} />
@@ -157,16 +149,14 @@ export function ExtraInfo() {
             fullWidth
           />
         )}
-        <LoadingButton
+        <DayGreenLoadingButton
           fullWidth
           loading={isSignIpPending}
           type="submit"
-          // needs to be exposed out //////////////////////////////////////
           disabled={!formik.isValid || !formik.dirty || !isAgencyCodeDuplicate}
-          variant="dayGreen"
         >
           {t("general.signUp")}
-        </LoadingButton>
+        </DayGreenLoadingButton>
       </StyledForm>
     </>
   );

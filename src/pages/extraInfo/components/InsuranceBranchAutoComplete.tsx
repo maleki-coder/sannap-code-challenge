@@ -4,7 +4,7 @@ import { Autocomplete, TextField } from "@mui/material";
 import { validateError } from "@utils/validateError";
 import { validateHelper } from "@utils/validateHelper";
 import { FormikProps } from "formik";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 interface InsuranceBranchAutoCompleteProps {
@@ -19,8 +19,14 @@ export const InsuranceBranchAutoComplete = (
   props: InsuranceBranchAutoCompleteProps
 ) => {
   const [branchSearchTerm, setBranchSearchTerm] = useState("");
-  const { data: branches } = useFetchListBranches(branchSearchTerm);
+  const { isPending, data: branches } = useFetchListBranches(
+    branchSearchTerm,
+    props.formik.values.province
+  );
   const { t } = useTranslation();
+  useEffect(() => {
+    setBranchSearchTerm("");
+  }, [props.formik.values.province]);
   return (
     <Autocomplete
       fullWidth
@@ -28,6 +34,8 @@ export const InsuranceBranchAutoComplete = (
       onChange={(_event, option) =>
         props.formik.setFieldValue("insurance_branch", option?.id)
       }
+      loading={isPending}
+      onClick={() => setBranchSearchTerm}
       disabled={!props.formik.values.province}
       onBlur={props.formik.handleBlur}
       options={branches || []}

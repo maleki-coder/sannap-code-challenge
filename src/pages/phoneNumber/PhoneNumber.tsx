@@ -1,19 +1,21 @@
-import { TextField, Typography, useTheme } from "@mui/material";
+import { Typography, useTheme } from "@mui/material";
 import { StyledHeaderBox, StyledForm } from "@/pages/phoneNumber/index";
 import { useTranslation } from "react-i18next";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import LoadingButton from "@mui/lab/LoadingButton";
 import { useCreateOtp } from "@hooks/useCreateOtp";
 import { RepresentativeRegistration } from "@/models/index";
 import { useRepresentativeStore, useStepperStore } from "@store/index";
-import { showSnackbar, validateError, validateHelper } from "@utils/index";
-import { CustomAxiosError } from "@infra/index";
+import { showSnackbar, translateErrorMessage } from "@utils/index";
+import { DayGreenLoadingButton, ValidatedTextField } from "@components/index";
+import { AxiosError } from "axios";
+import { ErrorData } from "@infra/index";
+
 export function PhoneNumber() {
   const theme = useTheme();
   const { t } = useTranslation();
   const { updateRepresentative } = useRepresentativeStore();
-  const { setCurrentStep, setAllowedStep } = useStepperStore();
+  const { setCurrentStep } = useStepperStore();
   const initialValues: Pick<RepresentativeRegistration, "phone_number"> = {
     phone_number: null,
   };
@@ -21,7 +23,7 @@ export function PhoneNumber() {
     phone_number: yup
       .string()
       .required(t("phoneNumber.required"))
-      .matches(/^\d{11}$/, t("phoneNumber.minimum_number_error")),
+      .matches(/^[۰-۹0-9]{11}$/, t("phoneNumber.minimum_number_error")),
   });
   const formik = useFormik({
     initialValues: initialValues,
@@ -34,10 +36,9 @@ export function PhoneNumber() {
     onSuccess: () => {
       updateRepresentative({ phone_number: formik.values.phone_number });
       setCurrentStep(2);
-      setAllowedStep(2);
     },
-    onError: (error) => {
-      showSnackbar(error.response.data.error_details.fa_details, {
+    onError: (error: AxiosError<ErrorData>) => {
+      showSnackbar(translateErrorMessage(error.response.data, "phone_number"), {
         variant: "error",
       });
     },
@@ -46,7 +47,7 @@ export function PhoneNumber() {
     <>
       <StyledHeaderBox>
         <Typography
-          color={theme.palette["customBlack"].main}
+          color={theme.palette.common.black}
           variant="body1"
           fontWeight={600}
           textAlign="center"
@@ -54,7 +55,7 @@ export function PhoneNumber() {
           {t("phoneNumber.title")}
         </Typography>
         <Typography
-          color={theme.palette["customBlack"].main}
+          color={theme.palette.common.black}
           variant="body2"
           fontWeight={300}
           textAlign="center"
@@ -63,28 +64,23 @@ export function PhoneNumber() {
         </Typography>
       </StyledHeaderBox>
       <StyledForm onSubmit={formik.handleSubmit} noValidate autoComplete="on">
-        <TextField
-          fullWidth
-          label={t("phoneNumber.number")}
+        <ValidatedTextField
+          formik={formik}
+          translationLabel={t("phoneNumber.number")}
           name="phone_number"
           id="phone_number"
-          value={formik.values.phone_number || ""}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          error={validateError(formik, "phone_number")}
-          helperText={validateHelper(formik, "phone_number")}
-          required
           disabled={isPending}
-        ></TextField>
-        <LoadingButton
+          required
+          fullWidth
+        />
+        <DayGreenLoadingButton
           loading={isPending}
           fullWidth
           type="submit"
           disabled={!formik.isValid || !formik.dirty}
-          variant="dayGreen"
         >
           {t("general.continue")}
-        </LoadingButton>
+        </DayGreenLoadingButton>
       </StyledForm>
     </>
   );

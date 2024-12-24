@@ -1,9 +1,27 @@
 import type {} from "@mui/lab/themeAugmentation";
 import type {} from "@mui/x-data-grid/themeAugmentation";
-import { createTheme, responsiveFontSizes } from "@mui/material";
+import {
+  createTheme,
+  responsiveFontSizes,
+  SimplePaletteColorOptions,
+} from "@mui/material";
 import { MUILocaleData } from "@infra/i18n/@types/supportedLocales";
 import { faIR as pickersfaIR } from "@mui/x-date-pickers/locales";
 import { faIR as gridfaIR } from "@mui/x-data-grid/locales";
+declare module "@mui/material/styles" {
+  interface Palette {
+    customGreen: SimplePaletteColorOptions;
+    customBrown: SimplePaletteColorOptions;
+    customGray: SimplePaletteColorOptions;
+    customRed: SimplePaletteColorOptions;
+  }
+  interface PaletteOptions {
+    customGreen?: SimplePaletteColorOptions;
+    customBrown?: SimplePaletteColorOptions;
+    customGray?: SimplePaletteColorOptions;
+    customRed?: SimplePaletteColorOptions;
+  }
+}
 export const getTheme = (mode: "light" | "dark", locale: MUILocaleData) => {
   return responsiveFontSizes(
     createTheme(
@@ -14,93 +32,55 @@ export const getTheme = (mode: "light" | "dark", locale: MUILocaleData) => {
           htmlFontSize: 16,
         },
         palette: {
-          mode,
           common: {
-            black: "#000000",
+            black: "#263238",
             white: "#ffffff",
           },
           background: {
-            default: mode === "light" ? "#fafafa" : "#121212",
-            paper: mode === "light" ? "#fff" : "#424242",
+            default: "#fafafa",
+            paper: "#fff",
           },
-          ...(mode === "light"
-            ? {
-                customBrown: {
-                  main: "#a36943",
-                },
-                customGray: {
-                  lightest: "#EEEEEE",
-                  lighter: "#F8F8F8",
-                  lighter_1: "#586264",
-                  light: "#DDDDDD",
-                  main: "#CCCCCC",
-                  dark: "#34383B",
-                },
-                customBlack: {
-                  main: "#263238",
-                },
-                customOrange: {
-                  light: "#FF9900",
-                  main: "#C96748",
-                },
-                dayGreen: {
-                  main: "#019BA7",
-                },
-                customGreen2: {
-                  main: "#009900",
-                },
-                customRed: {
-                  main: "#A81830",
-                },
-                primary: {
-                  main: "#fff",
-                  dark: "#000",
-                  contrastText: "#ffffff",
-                },
-                secondary: {
-                  main: "#01baef",
-                },
-
-                error: {
-                  main: "#b80c09",
-                },
-                warning: {
-                  main: "#b80c09",
-                },
-                info: {
-                  main: "#192bc2",
-                },
-                success: {
-                  main: "#2fce27",
-                },
-              }
-            : {
-                primary: {
-                  main: "#90caf9",
-                  contrastText: "#000000",
-                },
-                secondary: {
-                  main: "#ff4081",
-                },
-                error: {
-                  main: "#ef5350",
-                },
-                warning: {
-                  main: "#ffa726",
-                },
-                info: {
-                  main: "#29b6f6",
-                },
-                success: {
-                  main: "#66bb6a",
-                },
-              }),
+          customBrown: {
+            main: "#a36943",
+          },
+          customGray: {
+            light: "#DDDDDD",
+            main: "#CCCCCC",
+            dark: "#34383B",
+          },
+          customGreen: {
+            main: "#019BA7",
+            light: "#009900",
+          },
+          customRed: {
+            main: "#A81830",
+          },
+          primary: {
+            main: "#fff",
+            dark: "#000",
+            contrastText: "#ffffff",
+          },
+          secondary: {
+            main: "#01baef",
+          },
+          error: {
+            main: "#b80c09",
+          },
+          warning: {
+            main: "#b80c09",
+          },
+          info: {
+            main: "#192bc2",
+          },
+          success: {
+            main: "#2fce27",
+          },
         },
         components: {
           MuiCircularProgress: {
             styleOverrides: {
               root: ({ theme }) => ({
-                color: theme.palette["customGray"].main,
+                color: theme.palette.customGray.main,
               }),
             },
           },
@@ -109,9 +89,9 @@ export const getTheme = (mode: "light" | "dark", locale: MUILocaleData) => {
               root: ({ theme }) => ({
                 padding: 0,
                 paddingInlineEnd: theme.spacing(1),
-                color: theme.palette["customGray"].main,
+                color: theme.palette.customGray.main,
                 "&.Mui-checked": {
-                  color: theme.palette["customRed"].main,
+                  color: theme.palette.customRed.main,
                 },
               }),
             },
@@ -137,17 +117,8 @@ export const getTheme = (mode: "light" | "dark", locale: MUILocaleData) => {
                 borderRadius: theme.spacing(1),
                 fontSize: "0.8rem",
                 "&.Mui-disabled": {
-                  color: theme.palette["customGray"].light,
+                  color: theme.palette.customGray.light,
                 },
-                variants: [
-                  {
-                    props: { variant: "dayGreen" },
-                    style: {
-                      backgroundColor: theme.palette["dayGreen"].main,
-                      color: theme.palette.primary.main,
-                    },
-                  },
-                ],
               }),
             },
           },
@@ -157,19 +128,19 @@ export const getTheme = (mode: "light" | "dark", locale: MUILocaleData) => {
                 backgroundColor: theme.palette.primary.main,
                 borderRadius: "24px",
                 height: theme.spacing(5),
-                color: theme.palette["customBlack"].main,
+                color: theme.palette.common.black,
                 "&:hover": {
                   backgroundColor: theme.palette.primary.light,
                 },
                 "&.Mui-focused": {
                   backgroundColor: theme.palette.primary.main,
-                  borderColor: theme.palette["customBrown"].main,
+                  borderColor: theme.palette.customBrown.main,
                 },
                 "&::before": {
-                  borderBottom: `2px solid ${theme.palette["customBrown"].main}`,
+                  borderBottom: `2px solid ${theme.palette.customBrown.main}`,
                 },
                 "&::after": {
-                  borderBottom: `2px solid ${theme.palette["customBrown"].main}`,
+                  borderBottom: `2px solid ${theme.palette.customBrown.main}`,
                 },
               }),
               input: {
@@ -184,10 +155,10 @@ export const getTheme = (mode: "light" | "dark", locale: MUILocaleData) => {
                 borderRadius: theme.spacing(1),
                 fontSize: "0.8rem",
                 "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                  borderColor: theme.palette["customBrown"].main,
+                  borderColor: theme.palette.customBrown.main,
                 },
                 "&:hover .MuiOutlinedInput-notchedOutline": {
-                  borderColor: theme.palette["customBrown"].main,
+                  borderColor: theme.palette.customBrown.main,
                 },
               }),
             },
@@ -195,17 +166,17 @@ export const getTheme = (mode: "light" | "dark", locale: MUILocaleData) => {
           MuiFormHelperText: {
             styleOverrides: {
               root: ({ theme }) => ({
-                color: theme.palette["customBlack"].main,
+                color: theme.palette.common.black,
               }),
             },
           },
           MuiFormLabel: {
             styleOverrides: {
               root: ({ theme }) => ({
-                color: theme.palette["customBlack"].main,
+                color: theme.palette.common.black,
                 paddingInlineStart: theme.spacing(0.2),
                 "&.Mui-focused": {
-                  color: theme.palette["customBlack"].main,
+                  color: theme.palette.common.black,
                 },
               }),
             },
@@ -260,7 +231,6 @@ export const getTheme = (mode: "light" | "dark", locale: MUILocaleData) => {
         direction: locale.direction,
       },
       locale.muiCore,
-      locale.muiDatePicker,
       pickersfaIR,
       gridfaIR
     )

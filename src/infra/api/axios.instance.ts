@@ -1,3 +1,4 @@
+import { convertFarsiNumeralsInDto } from "@utils/index";
 import axios, { AxiosError } from "axios";
 
 interface ErrorDetails {
@@ -21,7 +22,17 @@ const axiosInstance = axios.create({
     "Content-Type": "application/json",
   },
 });
-
+axiosInstance.interceptors.request.use(
+  (config) => {
+    if (config.data) {
+      config.data = convertFarsiNumeralsInDto(config.data); // Convert Farsi numerals to English
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 axiosInstance.interceptors.response.use(
   async (response) => {
     // For successful responses, return the response as-is

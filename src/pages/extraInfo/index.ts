@@ -6,3 +6,5 @@ export * from "./components/StyledRadio";
 export * from "./components/AgencyCodeTextField"
 export * from "./components/ProvinceAutoComplete";
 export * from "./components/CountyAutoComplete";
+export * from "./validation/useExtraInfoValidationSchema";
+export * from "./initialValues";

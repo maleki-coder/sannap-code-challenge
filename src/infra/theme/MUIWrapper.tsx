@@ -7,8 +7,6 @@ import {
 import { useEffect, useMemo } from "react";
 import faIR from "date-fns-jalali/locale/fa-IR";
 import enUS from "date-fns-jalali/locale/en-US";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { AdapterDateFnsJalali } from "@mui/x-date-pickers/AdapterDateFnsJalali";
 
 import { CacheProvider } from "@emotion/react";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -59,11 +57,7 @@ export function MUIWrapper({ children }: { children: React.ReactNode }) {
         <CacheProvider value={locale.direction === "rtl" ? cacheRtl : emptyCache}>
             <ThemeProvider theme={theme}>
                 <LocalizationProvider
-                    dateAdapter={
-                        locale.direction === "rtl" ? AdapterDateFnsJalali : AdapterDayjs
-                    }
                     adapterLocale={locale.direction === "rtl" ? faIR : enUS.code}
-                // localeText={deDE.components.MuiLocalizationProvider.defaultProps.localeText}
                 >
                     {children}
                 </LocalizationProvider>

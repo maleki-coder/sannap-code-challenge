@@ -8,6 +8,8 @@ import { useTranslation } from "react-i18next";
 import { useCheckAgencyCode } from "@hooks/index";
 import { useEffect, useState } from "react";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import { ErrorData } from "@infra/index";
+import { AxiosError } from "axios";
 interface AgentCodeTextFieldProps {
   formik: FormikProps<
     Omit<
@@ -15,8 +17,12 @@ interface AgentCodeTextFieldProps {
       "first_name" | "last_name" | "phone_number"
     >
   >;
+  passIsAgencyCodeDuplicate: (agencyCodeDuplication: boolean) => void;
 }
-const AgencyCodeTextField = ({ formik }: AgentCodeTextFieldProps) => {
+const AgencyCodeTextField = ({
+  formik,
+  passIsAgencyCodeDuplicate,
+}: AgentCodeTextFieldProps) => {
   const { t } = useTranslation();
   const theme = useTheme();
   const [isAgencyCodeDuplicate, setIsAgencyCodeDuplicate] = useState(false);
@@ -26,12 +32,14 @@ const AgencyCodeTextField = ({ formik }: AgentCodeTextFieldProps) => {
   const { isPending, mutate: checkAgencyCode } = useCheckAgencyCode({
     onSuccess: () => {
       setIsAgencyCodeDuplicate(true);
+      passIsAgencyCodeDuplicate(true);
     },
-    onError: (error) => {
+    onError: (error: AxiosError<ErrorData>) => {
       showSnackbar(error.response.data.error_details.fa_details, {
         variant: "error",
       });
       setIsAgencyCodeDuplicate(false);
+      passIsAgencyCodeDuplicate(false);
     },
   });
   // this effect works as debouncer to prevent repetetive api calls
@@ -44,6 +52,22 @@ const AgencyCodeTextField = ({ formik }: AgentCodeTextFieldProps) => {
 
     return () => clearTimeout(timeoutId);
   }, [formik.values.agent_code, checkAgencyCode]);
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (
+      ![
+        "Backspace",
+        "Delete",
+        "Tab",
+        "Escape",
+        "Enter",
+        "ArrowLeft",
+        "ArrowRight",
+      ].includes(e.key) &&
+      !/^[0-9۰-۹]$/.test(e.key)
+    ) {
+      e.preventDefault();
+    }
+  };
   return (
     <TextField
       fullWidth
@@ -55,6 +79,7 @@ const AgencyCodeTextField = ({ formik }: AgentCodeTextFieldProps) => {
       onChange={formik.handleChange}
       onBlur={formik.handleBlur}
       error={validateError(formik, "agent_code")}
+      onKeyDown={handleKeyDown}
       helperText={validateHelper(formik, "agent_code")}
       slotProps={{
         htmlInput: {
@@ -69,7 +94,7 @@ const AgencyCodeTextField = ({ formik }: AgentCodeTextFieldProps) => {
                 !isPending &&
                 formik.values.agent_code && (
                   <CheckCircleOutlineIcon
-                    sx={{ color: theme.palette["customGreen2"].main }}
+                    sx={{ color: theme.palette.customGreen.light }}
                   />
                 )}
             </StyledAdorment>

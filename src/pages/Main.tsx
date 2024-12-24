@@ -1,4 +1,5 @@
-import { Header, RouteBody } from "@components/index";
+import { DynamicStepper } from "@components/DynamicStepper";
+import { Header } from "@components/index";
 import { styled, Box } from "@mui/material";
 import { useStepperStore } from "@store/index";
 interface StyledBoxProps {
@@ -17,14 +18,15 @@ const StyledBox = styled(Box)<StyledBoxProps>(({ theme, currentstep }) => ({
   justifyContent: "center",
   alignItems: currentstep === 5 ? "end" : "start",
 }));
+
 export function Main() {
-    const currentstep = useStepperStore((state) => state.currentStep);
-    return (
-      <>
-        <StyledBox currentstep={currentstep}>
-          <Header />
-          <RouteBody />
-        </StyledBox>
-      </>
-    );
+  const currentstep = useStepperStore((state) => state.currentStep);
+  return (
+    <>
+      <StyledBox currentstep={currentstep}>
+        <Header />
+        <DynamicStepper />
+      </StyledBox>
+    </>
+  );
 }

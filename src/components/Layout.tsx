@@ -9,7 +9,7 @@ const StyledBox = styled(Box)(({ theme }) => ({
   minHeight: "100vh",
   display: "flex",
   justifyContent: "center",
-  backgroundColor: theme.palette["customGray"].light
+  backgroundColor: theme.palette.customGray.light
 }));
 export function Layout() {
     return (

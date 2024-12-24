@@ -1,12 +1,10 @@
 import { styled } from "@mui/system";
 import { useStepperStore } from "@store/useStepperStore";
 
-// Define the interface for the additional prop
 interface StyledDivProps {
   currentstep: number;
 }
 
-// Styled components
 const StyledDiv = styled("div")<StyledDivProps>(({ theme, currentstep }) => ({
   position: "absolute",
   top: theme.spacing(0),
@@ -17,7 +15,7 @@ const StyledDiv = styled("div")<StyledDivProps>(({ theme, currentstep }) => ({
   width: "100%",
   display: "flex",
   justifyContent: "center",
-  backgroundColor: theme.palette["dayGreen"].main,
+  backgroundColor: theme.palette.customGreen.main,
   filter: currentstep === 5 ? "blur(2px)" : "none",
 }));
 
